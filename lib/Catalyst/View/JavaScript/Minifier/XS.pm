@@ -2,17 +2,14 @@ package Catalyst::View::JavaScript::Minifier::XS;
 
 use warnings;
 use strict;
+use autodie;
 
 use base qw/Catalyst::View/;
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
-use NEXT;
-use Carp qw/croak/;
 use JavaScript::Minifier::XS qw/minify/;
 use Path::Class::File;
-use Data::Dump qw/dump/;
-use Catalyst::Exception;
 use URI;
 
 =head1 NAME
@@ -30,13 +27,13 @@ Version 0.02
 
 	# in your controller file, as an action
     sub js : Local {
-		my ( $self, $c ) = @_;	
-		
+		my ( $self, $c ) = @_;
+
 		$c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
-	
+
 		$c->forward("View::JavaScript");
     }
-	
+
 	# in your html template use
 	<script type="text/javascript" src="/js"></script>
 
@@ -62,10 +59,10 @@ default : js
 
 setting this to true will take your js files (stash variable) from your referer action
 
-	# in your controller 
+	# in your controller
 	sub action : Local {
 		my ( $self, $c ) = @_;
-		
+
 		$c->stash->{js} = "exclusive"; # loads exclusive.js only when /action is loaded
 	}
 
@@ -79,87 +76,79 @@ default : false
 
 __PACKAGE__->mk_accessors(qw(stash_variable path subinclude));
 
-sub new {
-	my($class, $c, $arguments) = @_;
-    my $self = $class->NEXT::new($c);
-	my %config = ( stash_variable => 'js', path => 'js', subinclude => 0, %$arguments );
-	for my $field ( keys %config ) {
-		if ( $self->can($field) ) {
-			$self->$field( $config{$field} );
-		} else {
-			$c->log->debug("Unknown config parameter '$field'");
-		}
-	}
-	return $self;
-}
+__PACKAGE__->config(stash_variable => 'js', path => 'js', subinclude => 0);
+
 
 sub process {
 	my ($self,$c) = @_;
-			
-	my $path = $self->path;	
-	my $variable = $self->stash_variable;	
-	my @files = ();	
+
+	my $path = $self->path;
+	my $variable = $self->stash_variable;
+	my @files = ();
 
 	my $original_stash = $c->stash->{$variable};
-	
+
 	# setting the return content type
-	$c->res->content_type("text/javascript");
-	
+	$c->res->content_type('text/javascript');
+
 	# turning stash variable into @files
 	if ( $c->stash->{$variable} ) {
-		@files = ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );	
+		@files = ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );
 	}
-	
+
 	# No referer we won't show anything
-	if ( ! $c->request->headers->referer ) {		
-		$c->log->debug("javascripts called from no referer sending blank");		
-		$c->res->body( " " );			
+	if ( ! $c->request->headers->referer ) {
+		$c->log->debug('javascripts called from no referer sending blank');
+		$c->res->body( q{ } );
 		$c->detach();
 	}
-	
+
 	# If we have subinclude ON then we should run the action and see what it left behind
 	if ( $self->subinclude ) {
 		my $base = $c->request->base;
-		if ( $c->request->headers->referer ) {			
-			my $referer = URI->new($c->request->headers->referer);			
-			if ( $referer->path ne "/" ) {
-				$c->forward("/".$referer->path);
-				$c->log->debug("js taken from referer : ".$referer->path);
+		if ( $c->request->headers->referer ) {
+			my $referer = URI->new($c->request->headers->referer);
+			if ( $referer->path ne '/' ) {
+				$c->forward('/'.$referer->path);
+				$c->log->debug('js taken from referer : '.$referer->path);
 				if ( $c->stash->{$variable} ne $original_stash ) {
 					# adding other files returned from $c->forward to @files ( if any )
-					push @files, ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );	
+					push @files, ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );
 				}
 			} else {
 				# well for now we can't get js files from index, because it's indefinite loop
-				$c->log->debug("we can't take js from index, it's too dangerous!");
-			}			
+				$c->log->debug(q{we can't take js from index, it's too dangerous!});
+			}
 		}
 	}
-	
+
 	my $home = $self->config->{INCLUDE_PATH} || $c->path_to('root');
-	
 	@files = map {
 		my $file = $_;
 		$file =~ s/\.js$//;
-		Path::Class::File->new( $home, "$path", "$file.js" );		
+		Path::Class::File->new( $home, "$path", "$file.js" );
 	} @files;
-	
+
 	# combining the files
 	my @output = ();
 	for my $file ( @files ) {
 		$c->log->debug("loading js file ... $file");
-		open(IN, "<$file");
-		for ( <IN> ) {
+		open my $in, '<', "$file";
+		for ( <$in> ) {
 			push @output, $_;
 		}
-		close(IN);
+		close $in;
 	}
 
 	if ( @output ) {
 		# minifying them if any files loaded at all
-		$c->res->body( minify(join(" ",@output)) );	
+		$c->res->body(
+                   $c->debug
+                      ? join q{ },@output
+                      : minify(join q{ }, @output )
+                );
 	} else {
-		$c->res->body( " " );	
+		$c->res->body( q{ } );
 	}
 }
 
