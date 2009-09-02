@@ -1,0 +1,42 @@
+Catalyst-View-JavaScript-Minifier-XS
+
+This module is for catalyst framework and is for making your JavaScript minified
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Catalyst::View::JavaScript::Minifier::XS
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Catalyst-View-JavaScript-Minifier-XS
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Catalyst-View-JavaScript-Minifier-XS
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Catalyst-View-JavaScript-Minifier-XS
+
+    Search CPAN
+        http://search.cpan.org/dist/Catalyst-View-JavaScript-Minifier-XS/
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 Ivan Drinchev
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
