@@ -2,9 +2,8 @@ package Catalyst::View::JavaScript::Minifier::XS;
 
 use warnings;
 use strict;
-use autodie;
 
-use base qw/Catalyst::View/;
+use parent qw/Catalyst::View/;
 
 our $VERSION = '0.04';
 
