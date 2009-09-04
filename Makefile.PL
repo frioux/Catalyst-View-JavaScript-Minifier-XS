@@ -13,9 +13,10 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
-		'CSS::Minifier::XS' => 0,
-		'CSS::Squish' => 0,
-		'Catalyst' => 5.64		
+        'Path::Class' => 0.17,
+        'JavaScript::Minifier::XS' => 0,
+        'Catalyst' => 5.64,
+        'parent' => 0
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Catalyst-View-JavaScript-Minifier-XS-*' },
