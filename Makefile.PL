@@ -7,12 +7,11 @@ WriteMakefile(
     AUTHOR              => 'Ivan Drinchev <drinchev@gmail.com>',
     VERSION_FROM        => 'lib/Catalyst/View/JavaScript/Minifier/XS.pm',
     ABSTRACT_FROM       => 'lib/Catalyst/View/JavaScript/Minifier/XS.pm',
-    ($ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> 'perl')
-      : ()),
+    LICENSE             => 'perl',
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
+        'ExtUtils::MakeMaker' => 6.3002,
         'Path::Class' => 0.17,
         'JavaScript::Minifier::XS' => 0,
         'Catalyst' => 5.64,
