@@ -1,5 +1,8 @@
 Revision history for Catalyst-View-JavaScript-Minifier-XS
 
+0.04    Sept 4, 2009
+                fix RT49034, RT48815, RT48814
+
 0.03	23.02.2009/13:25
 		[bugfix] when no files parsed print nothing
 
