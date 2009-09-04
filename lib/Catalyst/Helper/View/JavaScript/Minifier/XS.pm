@@ -32,7 +32,7 @@ L<Catalyst::Manual>, L<Catalyst::Helper>
 
 =head1 AUTHOR
 
-Ivan Drinchev, C<drinchev@gmail.com>
+See L<Catalyst::View::JavaScript::Minifier::XS>
 
 =head1 LICENSE
 

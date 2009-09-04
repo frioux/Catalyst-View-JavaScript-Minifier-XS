@@ -159,6 +159,8 @@ L<Catalyst> , L<Catalyst::View>, L<JavaScript::Minifier::XS>
 
 Ivan Drinchev C<< <drinchev at gmail.com> >>
 
+Arthur Axel "fREW" Schmidt <frioux@gmail.com>
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-catalyst-view-JavaScript-minifier-xs at rt.cpan.org>, or through
