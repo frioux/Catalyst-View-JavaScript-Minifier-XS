@@ -49,7 +49,8 @@ __compclass__
 package [% class %];
 
 use strict;
+use warnings;
 
-use base 'Catalyst::View::JavaScript::Minifier::XS';
+use parent 'Catalyst::View::JavaScript::Minifier::XS';
 
 1;
