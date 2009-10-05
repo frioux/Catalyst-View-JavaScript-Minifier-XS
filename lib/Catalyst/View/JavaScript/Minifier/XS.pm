@@ -1,9 +1,7 @@
 package Catalyst::View::JavaScript::Minifier::XS;
 
-use warnings;
-use strict;
-
-use parent qw/Catalyst::View/;
+use Moose;
+extends 'Catalyst::View';
 
 our $VERSION = '0.04';
 
@@ -73,10 +71,29 @@ default : false
 
 =cut
 
-__PACKAGE__->mk_accessors(qw(stash_variable path subinclude));
+has stash_variable => (
+   is => 'ro',
+   isa => 'Str',
+   default => 'js',
+);
 
-__PACKAGE__->config(stash_variable => 'js', path => 'js', subinclude => 0);
+has path => (
+   is => 'ro',
+   isa => 'Str',
+   default => 'js',
+);
 
+has subinclude => (
+   is => 'ro',
+   isa => 'Bool',
+   default => undef,
+);
+
+has cached_js => (
+   is => 'rw',
+   isa => 'Str',
+   predicate => 'cached_js_is_set',
+);
 
 sub process {
 	my ($self,$c) = @_;
