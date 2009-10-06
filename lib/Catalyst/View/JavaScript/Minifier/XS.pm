@@ -3,8 +3,6 @@ package Catalyst::View::JavaScript::Minifier::XS;
 use Moose;
 extends 'Catalyst::View';
 
-our $VERSION = '0.04';
-
 use JavaScript::Minifier::XS qw/minify/;
 use Path::Class::File;
 use URI;
@@ -12,10 +10,6 @@ use URI;
 =head1 NAME
 
 Catalyst::View::JavaScript::Minifier::XS - Concenate and minify your JavaScript files.
-
-=head1 VERSION
-
-Version 0.02
 
 =head1 SYNOPSIS
 
@@ -87,12 +81,6 @@ has subinclude => (
    is => 'ro',
    isa => 'Bool',
    default => undef,
-);
-
-has cached_js => (
-   is => 'rw',
-   isa => 'Str',
-   predicate => 'cached_js_is_set',
 );
 
 sub process {
@@ -170,7 +158,7 @@ sub process {
 
 =head1 SEE ALSO
 
-L<Catalyst> , L<Catalyst::View>, L<JavaScript::Minifier::XS>
+L<Catalyst>, L<Catalyst::View>, L<JavaScript::Minifier::XS>
 
 =head1 AUTHOR
 
@@ -184,13 +172,6 @@ Please report any bugs or feature requests to C<bug-catalyst-view-JavaScript-min
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Catalyst-View-JavaScript-Minifier-XS>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2009 Ivan Drinchev, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
 =cut
 
-1; # End of Catalyst::View::JavaScript::Minifier::XS
+1;

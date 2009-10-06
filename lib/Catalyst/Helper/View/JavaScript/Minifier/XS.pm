@@ -34,11 +34,6 @@ L<Catalyst::Manual>, L<Catalyst::Helper>
 
 See L<Catalyst::View::JavaScript::Minifier::XS>
 
-=head1 LICENSE
-
-This library is free software . You can redistribute it and/or modify
-it under the same terms as perl itself.
-
 =cut
 
 1;
