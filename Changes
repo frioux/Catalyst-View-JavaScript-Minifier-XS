@@ -1,5 +1,8 @@
 Revision history for Catalyst-View-JavaScript-Minifier-XS
 
+0.092800  Oct 6, 2009
+                Add in build_requires that I forgot in the switch to dzil
+
 0.092790  Oct 6, 2009
                 Switch to dzil for autoversioning etc
                 Switch to Moose for config variables
