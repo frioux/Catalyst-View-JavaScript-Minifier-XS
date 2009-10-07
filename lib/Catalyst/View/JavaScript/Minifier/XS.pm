@@ -13,20 +13,20 @@ Catalyst::View::JavaScript::Minifier::XS - Concenate and minify your JavaScript 
 
 =head1 SYNOPSIS
 
-    # creating MyApp::View::JavaScript
-    ./script/myapp_create.pl view JavaScript JavaScript::Minifier::XS
+   # creating MyApp::View::JavaScript
+   ./script/myapp_create.pl view JavaScript JavaScript::Minifier::XS
 
-	# in your controller file, as an action
-    sub js : Local {
-		my ( $self, $c ) = @_;
+   # in your controller file, as an action
+   sub js : Local {
+      my ( $self, $c ) = @_;
 
-		$c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
+      $c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
 
-		$c->forward("View::JavaScript");
-    }
+      $c->forward('View::JavaScript');
+   }
 
-	# in your html template use
-	<script type="text/javascript" src="/js"></script>
+   # in your html template use
+   <script type="text/javascript" src="/js"></script>
 
 =head1 DESCRIPTION
 
