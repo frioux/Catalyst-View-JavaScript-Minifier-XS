@@ -30,55 +30,66 @@ has subinclude => (
 sub process {
    my ($self,$c) = @_;
 
-   my $path = $self->path;
-   my $variable = $self->stash_variable;
-   my @files = ();
+   my $original_stash = $c->stash->{$self->stash_variable};
+   my @files = $self->_expand_stash($original_stash);
 
-   my $original_stash = $c->stash->{$variable};
-
-   # setting the return content type
    $c->res->content_type('text/javascript');
 
-   # turning stash variable into @files
-   if ( $c->stash->{$variable} ) {
-      @files = ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );
-   }
+   push @files, $self->_subinclude($c, $original_stash, @files);
 
-   # No referer we won't show anything
-   if ( ! $c->request->headers->referer ) {
+   my $home = $self->config->{INCLUDE_PATH} || $c->path_to('root');
+   @files = map {
+      $_ =~ s/\.js$//;
+      Path::Class::File->new( $home, $self->path, "$_.js" );
+   } grep { defined $_ && $_ ne '' } @files;
+
+   my @output = $self->_combine_files($c, \@files);
+
+   $c->res->body( $self->_minify($c, \@output) );
+}
+
+sub _subinclude {
+   my ( $self, $c, $original_stash, @files ) = @_;
+
+   return unless $self->subinclude && $c->request->headers->referer;
+
+   unless ( $c->request->headers->referer ) {
       $c->log->debug('javascripts called from no referer sending blank');
       $c->res->body( q{ } );
       $c->detach();
    }
 
-   # If we have subinclude ON then we should run the action and see what it left behind
-   if ( $self->subinclude ) {
-      my $base = $c->request->base;
-      if ( $c->request->headers->referer ) {
-         my $referer = URI->new($c->request->headers->referer);
-         if ( $referer->path ne '/' ) {
-            $c->forward('/'.$referer->path);
-            $c->log->debug('js taken from referer : '.$referer->path);
-            if ( $c->stash->{$variable} ne $original_stash ) {
-               # adding other files returned from $c->forward to @files ( if any )
-               push @files, ( ref $c->stash->{$variable} eq 'ARRAY' ? @{ $c->stash->{$variable} } : split /\s+/, $c->stash->{$variable} );
-            }
-         } else {
-            # well for now we can't get js files from index, because it's indefinite loop
-            $c->log->debug(q{we can't take js from index, it's too dangerous!});
-         }
-      }
+   my $referer = URI->new($c->request->headers->referer);
+
+   if ( $referer->path eq '/' ) {
+      $c->log->debug(q{we can't take js from index as it's too likely to enter an infinite loop!});
+      return;
    }
 
-   my $home = $self->config->{INCLUDE_PATH} || $c->path_to('root');
-   @files = map {
-      $_ =~ s/\.js$//;
-      Path::Class::File->new( $home, $path, "$_.js" );
-   } @files;
+   $c->forward('/'.$referer->path);
+   $c->log->debug('js taken from referer : '.$referer->path);
 
-   # combining the files
+   return $self->_expand_stash($c->stash->{$self->stash_variable})
+      if $c->stash->{$self->stash_variable} ne $original_stash;
+}
+
+sub _minify {
+   my ( $self, $c, $output ) = @_;
+
+   if ( @{$output} ) {
+      return $c->debug
+         ? join q{ }, @{$output}
+         : minify(join q{ }, @{$output} )
+   } else {
+      return q{ };
+   }
+}
+
+sub _combine_files {
+   my ( $self, $c, $files ) = @_;
+
    my @output;
-   for my $file (@files) {
+   for my $file (@{$files}) {
       $c->log->debug("loading js file ... $file");
       open my $in, '<', $file;
       for (<$in>) {
@@ -86,17 +97,18 @@ sub process {
       }
       close $in;
    }
+   return @output;
+}
 
-   if ( @output ) {
-      # minifying them if any files loaded at all
-      $c->res->body(
-         $c->debug
-            ? join q{ },@output
-            : minify(join q{ }, @output )
-      );
-   } else {
-      $c->res->body( q{ } );
+sub _expand_stash {
+   my ( $self, $stash_var ) = @_;
+
+   if ( $stash_var ) {
+      return ref $stash_var eq 'ARRAY'
+         ? @{ $stash_var }
+	 : split /\s+/, $stash_var;
    }
+
 }
 
 1;

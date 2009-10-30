@@ -7,18 +7,11 @@ use FindBin;
 use Test::More;
 use File::Spec;
 use JavaScript::Minifier::XS 'minify';
-use HTTP::Request;
-use HTTP::Headers;
 
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
 use Catalyst::Test 'TestApp';
 
-my $h = HTTP::Headers->new;
-$h->referrer('/');
-
-my $request = HTTP::Request->new(GET => '/test', $h);
-
-my $served = get($request);
+my $served = get('/test');
 
 ok $served, q{served data isn't blank};
 my $path = File::Spec->catfile($FindBin::Bin, qw{lib TestApp root js foo.js});

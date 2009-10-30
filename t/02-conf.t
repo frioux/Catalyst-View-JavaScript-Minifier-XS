@@ -7,21 +7,13 @@ use FindBin;
 use Test::More;
 use File::Spec;
 use JavaScript::Minifier::XS 'minify';
-use HTTP::Request;
-use HTTP::Headers;
 
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
 use Catalyst::Test 'TestApp2';
 
-my $h = HTTP::Headers->new;
-$h->referrer('/');
+my $served = get('/test');
 
-my $request = HTTP::Request->new(GET => '/test', $h);
-
-my $served = get($request);
-
-ok $served, q{served data isn't blank};
-my $path = File::Spec->catfile($FindBin::Bin, qw{lib TestApp root js foo.js});
+my $path = File::Spec->catfile($FindBin::Bin, qw{lib TestApp2 root sj foo.js});
 open my $file, '<', $path;
 
 my $str = q{};
@@ -29,7 +21,7 @@ while (<$file>) {
    $str .= $_;
 }
 
-is minify($str), $served, 'server actually minifed the javascript';
+ok $served && minify($str) eq $served, 'server actually minifed the javascript';
 
 done_testing;
 
