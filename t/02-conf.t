@@ -21,7 +21,8 @@ while (<$file>) {
    $str .= $_;
 }
 
-ok $served && minify($str) eq $served, 'server actually minifed the javascript';
+ok $served && minify($str) eq $served,
+   'server actually minifed the javascript, so changing the stash variable and path worked';
 
 done_testing;
 

@@ -22,7 +22,7 @@ while (<$file>) {
    $str .= $_;
 }
 
-is minify($str), $served, 'server actually minifed the javascript, so we know that changing the stash variable and path worked';
+is minify($str), $served, 'server actually minifed the javascript';
 
 done_testing;
 

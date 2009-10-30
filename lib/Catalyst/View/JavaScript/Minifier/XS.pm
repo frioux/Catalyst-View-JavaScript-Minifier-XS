@@ -124,7 +124,8 @@ sub _expand_stash {
  sub js : Local {
     my ( $self, $c ) = @_;
 
-    $c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
+    # loads root/js/script1.js and root/js/script2.js
+    $c->stash->{js} = [qw/script1 script2/];
 
     $c->forward('View::JavaScript');
  }
@@ -154,16 +155,20 @@ default : js
 
 =item subinclude
 
-setting this to true will take your js files (stash variable) from your referer action
+setting this to true will take your js files (stash variable) from your referer
+action
 
  # in your controller
  sub action : Local {
     my ( $self, $c ) = @_;
 
-    $c->stash->{js} = "exclusive"; # loads exclusive.js only when /action is loaded
+    # load exclusive.js only when /action is loaded
+    $c->stash->{js} = "exclusive";
  }
 
-This could be very dangerous since it's using C<< $c->forward($c->request->headers->referer) >>. It doesn't work with the index action!
+This could be very dangerous since it's using
+C<< $c->forward($c->request->headers->referer) >>. It doesn't work with the
+index action!
 
 default : false
 
