@@ -1,69 +1,13 @@
 package Catalyst::View::JavaScript::Minifier::XS;
 
+# ABSTRACT: Minify your served JavaScript files
+
 use Moose;
 extends 'Catalyst::View';
 
 use JavaScript::Minifier::XS qw/minify/;
 use Path::Class::File;
 use URI;
-
-=head1 NAME
-
-Catalyst::View::JavaScript::Minifier::XS - Concenate and minify your JavaScript files.
-
-=head1 SYNOPSIS
-
-   # creating MyApp::View::JavaScript
-   ./script/myapp_create.pl view JavaScript JavaScript::Minifier::XS
-
-   # in your controller file, as an action
-   sub js : Local {
-      my ( $self, $c ) = @_;
-
-      $c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
-
-      $c->forward('View::JavaScript');
-   }
-
-   # in your html template use
-   <script type="text/javascript" src="/js"></script>
-
-=head1 DESCRIPTION
-
-Use your minified js files as a separated catalyst request. By default they are read from C<< $c->stash->{js} >> as array or string.
-
-=head1 CONFIG VARIABLES
-
-=over 2
-
-=item stash_variable
-
-sets a different stash variable from the default C<< $c->stash->{js} >>
-
-=item path
-
-sets a different path for your javascript files
-
-default : js
-
-=item subinclude
-
-setting this to true will take your js files (stash variable) from your referer action
-
-	# in your controller
-	sub action : Local {
-		my ( $self, $c ) = @_;
-
-		$c->stash->{js} = "exclusive"; # loads exclusive.js only when /action is loaded
-	}
-
-This could be very dangerous since it's using C<< $c->forward($c->request->headers->referer) >>. It doesn't work with the index action!
-
-default : false
-
-=back
-
-=cut
 
 has stash_variable => (
    is => 'ro',
@@ -156,22 +100,65 @@ sub process {
 	}
 }
 
-=head1 SEE ALSO
+1;
 
-L<Catalyst>, L<Catalyst::View>, L<JavaScript::Minifier::XS>
+=pod
 
-=head1 AUTHOR
+=head1 SYNOPSIS
 
-Ivan Drinchev C<< <drinchev at gmail.com> >>
+ # creating MyApp::View::JavaScript
+ ./script/myapp_create.pl view JavaScript JavaScript::Minifier::XS
 
-Arthur Axel "fREW" Schmidt <frioux@gmail.com>
+ # in your controller file, as an action
+ sub js : Local {
+    my ( $self, $c ) = @_;
 
-=head1 BUGS
+    $c->stash->{js} = [qw/script1 script2/]; # loads root/js/script1.js and root/js/script2.js
 
-Please report any bugs or feature requests to C<bug-catalyst-view-JavaScript-minifier-xs at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Catalyst-View-JavaScript-Minifier-XS>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+    $c->forward('View::JavaScript');
+ }
+
+ # in your html
+ <script type="text/javascript" src="/js"></script>
+
+=head1 DESCRIPTION
+
+Use your minified js files as a separated catalyst request. By default they are read from C<< $c->stash->{js} >> as array or string.
+
+=head1 CONFIG VARIABLES
+
+=over 2
+
+=item stash_variable
+
+sets a different stash variable from the default C<< $c->stash->{js} >>
+
+=item path
+
+sets a different path for your javascript files
+
+default : js
+
+=item subinclude
+
+setting this to true will take your js files (stash variable) from your referer action
+
+ # in your controller
+ sub action : Local {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{js} = "exclusive"; # loads exclusive.js only when /action is loaded
+ }
+
+This could be very dangerous since it's using C<< $c->forward($c->request->headers->referer) >>. It doesn't work with the index action!
+
+default : false
+
+=back
 
 =cut
 
-1;
+=head1 SEE ALSO
+
+L<JavaScript::Minifier::XS>
+

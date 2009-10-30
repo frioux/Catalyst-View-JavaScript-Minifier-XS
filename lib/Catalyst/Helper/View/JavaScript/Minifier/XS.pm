@@ -1,6 +1,7 @@
 package Catalyst::Helper::View::JavaScript::Minifier::XS;
 
 use strict;
+use warnings;
 
 =head1 NAME
 
@@ -8,15 +9,7 @@ Catalyst::Helper::View::JavaScript::Minifier::XS - Helper for JavaScript::Minifi
 
 =head1 SYNOPSIS
 
-    script/create.pl view JavaScript JavaScript::Minifier::XS
-
-=head1 DESCRIPTION
-
-Helper for JavaScript::Minifier::XS views
-
-=head2 METHODS
-
-=head3 mk_compclass
+ script/create.pl view JavaScript JavaScript::Minifier::XS
 
 =cut
 
@@ -25,16 +18,6 @@ sub mk_compclass {
     my $file = $helper->{file};
     $helper->render_file( 'compclass', $file );
 }
-
-=head1 SEE ALSO
-
-L<Catalyst::Manual>, L<Catalyst::Helper>
-
-=head1 AUTHOR
-
-See L<Catalyst::View::JavaScript::Minifier::XS>
-
-=cut
 
 1;
 
