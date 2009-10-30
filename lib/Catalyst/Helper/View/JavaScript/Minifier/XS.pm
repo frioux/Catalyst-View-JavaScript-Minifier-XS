@@ -11,7 +11,14 @@ Catalyst::Helper::View::JavaScript::Minifier::XS - Helper for JavaScript::Minifi
 
  script/create.pl view JavaScript JavaScript::Minifier::XS
 
+=head1 METHODS
+
+=head2 mk_compclass
+
+Internal method for generating the view.
+
 =cut
+
 
 sub mk_compclass {
     my ( $self, $helper ) = @_;

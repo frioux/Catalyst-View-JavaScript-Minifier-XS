@@ -1,5 +1,11 @@
 Revision history for Catalyst-View-JavaScript-Minifier-XS
 
+                Possibly breaking change: in the past you *always* had to have a
+                referrer, now you only need it if you are using subinclude and
+                are in the process of "subincluding"
+
+                Lots of tests for almost all features
+
                 Some pod cleanup and more accurate author sections
 
 0.092800  Oct 6, 2009
