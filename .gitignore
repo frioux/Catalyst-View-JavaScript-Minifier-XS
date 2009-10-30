@@ -1,3 +1,5 @@
 *.swp
 Makefile
 *.tar.gz
+.build
+
