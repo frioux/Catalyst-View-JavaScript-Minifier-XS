@@ -72,9 +72,8 @@ sub process {
 
 	my $home = $self->config->{INCLUDE_PATH} || $c->path_to('root');
 	@files = map {
-		my $file = $_;
-		$file =~ s/\.js$//;
-		Path::Class::File->new( $home, "$path", "$file.js" );
+		$_ =~ s/\.js$//;
+		Path::Class::File->new( $home, $path, "$_.js" );
 	} @files;
 
 	# combining the files
@@ -123,7 +122,9 @@ sub process {
 
 =head1 DESCRIPTION
 
-Use your minified js files as a separated catalyst request. By default they are read from C<< $c->stash->{js} >> as array or string.
+Use your minified js files as a separated catalyst request. By default they
+are read from C<< $c->stash->{js} >> as array or string.  Also note that this
+does not minify the javascript if the server is started in development mode.
 
 =head1 CONFIG VARIABLES
 
