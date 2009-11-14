@@ -1,30 +1,32 @@
 Revision history for Catalyst-View-JavaScript-Minifier-XS
 
-0.093030  Oct 30, 2009
-                Possibly breaking change: in the past you *always* had to have a
-                referrer, now you only need it if you are using subinclude and
-                are in the process of "subincluding"
+         Fix required version of Catalyst
 
-                Lots of tests for almost all features
+0.093030 Oct 30, 2009
+         Possibly breaking change: in the past you *always* had to have a
+         referrer, now you only need it if you are using subinclude and
+         are in the process of "subincluding"
 
-                Some pod cleanup and more accurate author sections
+         Lots of tests for almost all features
 
-0.092800  Oct 6, 2009
-                Add in build_requires that I forgot in the switch to dzil
+         Some pod cleanup and more accurate author sections
 
-0.092790  Oct 6, 2009
-                Switch to dzil for autoversioning etc
-                Switch to Moose for config variables
+0.092800 Oct 6, 2009
+         Add in build_requires that I forgot in the switch to dzil
 
-0.04      Sept 4, 2009
-                  fix RT49034, RT48815, RT48814
+0.092790 Oct 6, 2009
+         Switch to dzil for autoversioning etc
+         Switch to Moose for config variables
 
-0.03	  23.02.2009/13:25
-	  	[bugfix] when no files parsed print nothing
+0.04     Sept 4, 2009
+         fix RT49034, RT48815, RT48814
 
-0.02	  18.02.2009/13:00
-	  	Added helper
+0.03	 23.02.2009/13:25
+	 [bugfix] when no files parsed print nothing
 
-0.01      16.02.2009/10:13
-          First version, released on an unsuspecting world.
+0.02	 18.02.2009/13:00
+	 Added helper
+
+0.01     16.02.2009/10:13
+         First version, released on an unsuspecting world.
 
