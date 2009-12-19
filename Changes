@@ -1,4 +1,7 @@
-Revision history for Catalyst-View-JavaScript-Minifier-XS
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+         Add autodie so you get errors for js files that don't exist
 
 0.093180 Nov 14, 2009
          Fix required version of Catalyst

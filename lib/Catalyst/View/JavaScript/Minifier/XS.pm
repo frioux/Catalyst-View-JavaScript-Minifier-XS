@@ -2,6 +2,7 @@ package Catalyst::View::JavaScript::Minifier::XS;
 
 # ABSTRACT: Minify your served JavaScript files
 
+use autodie;
 use Moose;
 extends 'Catalyst::View';
 
