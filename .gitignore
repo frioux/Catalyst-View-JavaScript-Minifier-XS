@@ -2,4 +2,4 @@
 Makefile
 *.tar.gz
 .build
-
+Catalyst-View-JavaScript-Minifier-XS-*
