@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+         Fix module such that the debug output only shows if the
+           server is in debug mode
+
+1.093530  2009-12-19 15:55:43 CST6CDT
          Add autodie so you get errors for js files that don't exist
 
 0.093180 Nov 14, 2009

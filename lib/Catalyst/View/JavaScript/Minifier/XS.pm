@@ -55,7 +55,7 @@ sub _subinclude {
    return unless $self->subinclude && $c->request->headers->referer;
 
    unless ( $c->request->headers->referer ) {
-      $c->log->debug('javascripts called from no referer sending blank');
+      $c->log->debug('javascripts called from no referer sending blank') if $c->debug;
       $c->res->body( q{ } );
       $c->detach();
    }
@@ -63,12 +63,12 @@ sub _subinclude {
    my $referer = URI->new($c->request->headers->referer);
 
    if ( $referer->path eq '/' ) {
-      $c->log->debug(q{we can't take js from index as it's too likely to enter an infinite loop!});
+      $c->log->debug(q{we can't take js from index as it's too likely to enter an infinite loop!}) if $c->debug;
       return;
    }
 
    $c->forward('/'.$referer->path);
-   $c->log->debug('js taken from referer : '.$referer->path);
+   $c->log->debug('js taken from referer : '.$referer->path) if $c->debug;
 
    return $self->_expand_stash($c->stash->{$self->stash_variable})
       if $c->stash->{$self->stash_variable} ne $original_stash;
@@ -91,7 +91,7 @@ sub _combine_files {
 
    my @output;
    for my $file (@{$files}) {
-      $c->log->debug("loading js file ... $file");
+      $c->log->debug("loading js file ... $file") if $c->debug;
       open my $in, '<', $file;
       for (<$in>) {
          push @output, $_;
@@ -107,7 +107,7 @@ sub _expand_stash {
    if ( $stash_var ) {
       return ref $stash_var eq 'ARRAY'
          ? @{ $stash_var }
-	 : split /\s+/, $stash_var;
+         : split /\s+/, $stash_var;
    }
 
 }
