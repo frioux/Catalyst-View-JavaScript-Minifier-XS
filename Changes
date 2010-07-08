@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+2.000000  2010-07-07 22:33:36 CST6CDT
+         Stop using RJBS-versions
          Fix module such that the debug output only shows if the
            server is in debug mode
 
@@ -29,11 +32,11 @@ Revision history for {{$dist->name}}
 0.04     Sept 4, 2009
          fix RT49034, RT48815, RT48814
 
-0.03	 23.02.2009/13:25
-	 [bugfix] when no files parsed print nothing
+0.03   23.02.2009/13:25
+    [bugfix] when no files parsed print nothing
 
-0.02	 18.02.2009/13:00
-	 Added helper
+0.02   18.02.2009/13:00
+    Added helper
 
 0.01     16.02.2009/10:13
          First version, released on an unsuspecting world.
