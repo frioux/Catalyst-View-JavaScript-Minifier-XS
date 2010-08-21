@@ -4,11 +4,20 @@ package Catalyst::View::JavaScript::Minifier::XS;
 
 use autodie;
 use Moose;
+
 extends 'Catalyst::View';
 
 use JavaScript::Minifier::XS qw/minify/;
-use Path::Class::File;
+use Moose::Util::TypeConstraints;
+use MooseX::Aliases;
+use Path::Class::Dir;
 use URI;
+
+my $dir_type = __PACKAGE__.'::Dir';
+subtype $dir_type => as class_type('Path::Class::Dir');
+coerce $dir_type,
+    from 'Str',      via { Path::Class::Dir->new($_)  },
+    from 'ArrayRef', via { Path::Class::Dir->new(@$_) };
 
 has stash_variable => (
    is => 'ro',
@@ -16,10 +25,12 @@ has stash_variable => (
    default => 'js',
 );
 
-has path => (
-   is => 'ro',
-   isa => 'Str',
+has js_dir => (
+   is      => 'ro',
+   isa     => $dir_type,
+   coerce  => 1,
    default => 'js',
+   alias   => 'path',
 );
 
 has subinclude => (
@@ -27,6 +38,13 @@ has subinclude => (
    isa => 'Bool',
    default => undef,
 );
+
+# for backcompat. don't use this.
+has 'INCLUDE_PATH' => (
+    is     => 'ro',
+    isa    => $dir_type,
+    coerce => 1,
+   );
 
 sub process {
    my ($self,$c) = @_;
@@ -38,10 +56,15 @@ sub process {
 
    push @files, $self->_subinclude($c, $original_stash, @files);
 
-   my $home = $self->config->{INCLUDE_PATH} || $c->path_to('root');
+   # the 'root' conf var might not be absolute
+   my $abs_root = Path::Class::Dir->new( $c->config->{'root'} )->absolute( $c->path_to );
+   my $js_dir   = $self->js_dir->absolute( $abs_root );
+
+   # backcompat only
+   $js_dir = $self->INCLUDE_PATH->subdir($js_dir) if $self->INCLUDE_PATH;
+
    @files = map {
-      $_ =~ s/\.js$//;
-      Path::Class::File->new( $home, $self->path, "$_.js" );
+      $_ =~ s/\.js$//;  $js_dir->file( "$_.js" )
    } grep { defined $_ && $_ ne '' } @files;
 
    my @output = $self->_combine_files($c, \@files);
@@ -148,9 +171,10 @@ does not minify the javascript if the server is started in development mode.
 
 sets a different stash variable from the default C<< $c->stash->{js} >>
 
-=item path
+=item js_dir
 
-sets a different path for your javascript files
+Directory containing your javascript files.  If a relative path is
+given, it is taken as relative to your app's root directory.
 
 default : js
 

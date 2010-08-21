@@ -2,6 +2,10 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+         Rename 'path' config var to 'js_dir' (with an alias for
+         backcompat).  Path is too easy to
+         confuse with other kinds of paths.
+
 2.000000  2010-07-07 22:33:36 CST6CDT
          Stop using RJBS-versions
          Fix module such that the debug output only shows if the
