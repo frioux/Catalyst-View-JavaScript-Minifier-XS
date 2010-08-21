@@ -10,6 +10,7 @@ use Catalyst;
 
 __PACKAGE__->config(
    name => 'TestApp2',
+   root => 'different_root',
    'View::JS' => {
       stash_variable => 'frew',
    }
