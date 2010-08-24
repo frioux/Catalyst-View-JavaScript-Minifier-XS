@@ -102,7 +102,7 @@ sub _minify {
 
    if ( @{$output} ) {
       return $c->debug
-         ? join q{ }, @{$output}
+         ? join "\n", @{$output}
          : minify(join q{ }, @{$output} )
    } else {
       return q{ };
