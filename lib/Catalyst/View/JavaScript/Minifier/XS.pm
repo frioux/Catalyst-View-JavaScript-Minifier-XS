@@ -67,9 +67,9 @@ sub process {
       $_ =~ s/\.js$//;  $js_dir->file( "$_.js" )
    } grep { defined $_ && $_ ne '' } @files;
 
-   my @output = $self->_combine_files($c, \@files);
+   my $output = $self->_combine_files($c, \@files);
 
-   $c->res->body( $self->_minify($c, \@output) );
+   $c->res->body( $self->_minify($c, $output) );
 }
 
 sub _subinclude {
@@ -116,12 +116,10 @@ sub _combine_files {
    for my $file (@{$files}) {
       $c->log->debug("loading js file ... $file") if $c->debug;
       open my $in, '<', $file;
-      for (<$in>) {
-         push @output, $_;
-      }
-      close $in;
+      local $/;
+      push @output, scalar <$in>;
    }
-   return @output;
+   return \@output;
 }
 
 sub _expand_stash {
