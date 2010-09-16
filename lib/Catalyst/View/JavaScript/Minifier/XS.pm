@@ -7,7 +7,9 @@ use Moose;
 
 extends 'Catalyst::View';
 
+use File::stat;
 use JavaScript::Minifier::XS qw/minify/;
+use List::Util 'max';
 use Moose::Util::TypeConstraints;
 use MooseX::Aliases;
 use Path::Class::Dir;
@@ -69,6 +71,7 @@ sub process {
 
    my $output = $self->_combine_files($c, \@files);
 
+   $c->res->headers->last_modified( max map stat($_)->mtime, @files );
    $c->res->body( $self->_minify($c, $output) );
 }
 
