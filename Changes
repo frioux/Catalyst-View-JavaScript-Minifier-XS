@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+2.100000  2010-08-25 10:40:29 CST6CDT
+
          Rename 'path' config var to 'js_dir' (with an alias for
          backcompat).  Path is too easy to
          confuse with other kinds of paths.
