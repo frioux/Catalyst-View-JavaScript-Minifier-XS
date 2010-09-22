@@ -1,12 +1,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+         Add last-modified header for great justice (rbuels)
+
 
 2.100000  2010-08-25 10:40:29 CST6CDT
-
          Rename 'path' config var to 'js_dir' (with an alias for
          backcompat).  Path is too easy to
-         confuse with other kinds of paths.
+         confuse with other kinds of paths. (rbuels)
 
 2.000000  2010-07-07 22:33:36 CST6CDT
          Stop using RJBS-versions
