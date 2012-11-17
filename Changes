@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+2.101001  2012-11-17 15:53:38 CST6CDT
+         Put MetaYAML back in dist
+
 2.101000  2010-09-21 19:26:50 CST6CDT
          Add last-modified header for great justice (rbuels)
 
