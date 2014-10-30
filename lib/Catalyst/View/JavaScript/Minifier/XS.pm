@@ -29,8 +29,6 @@ has stash_variable => (
 
 has js_dir => (
    is      => 'ro',
-   isa     => $dir_type,
-   coerce  => 1,
    default => 'js',
    alias   => 'path',
 );
@@ -60,18 +58,17 @@ sub process {
 
    # the 'root' conf var might not be absolute
    my $abs_root = Path::Class::Dir->new( $c->config->{'root'} )->absolute( $c->path_to );
-   my $js_dir   = $self->js_dir->absolute( $abs_root );
 
-   # backcompat only
-   $js_dir = $self->INCLUDE_PATH->subdir($js_dir) if $self->INCLUDE_PATH;
+   my $file_list;
+   if ( $self->js_dir || $self->INCLUDE_PATH ) {
+      $file_list = $self->_with_js_dir( \@files, $abs_root );
+   } else {
+      $file_list = $self->_no_js_dir( \@files );
+   }
 
-   @files = map {
-      $_ =~ s/\.js$//;  $js_dir->file( "$_.js" )
-   } grep { defined $_ && $_ ne '' } @files;
+   my $output = $self->_combine_files($c, $file_list);
 
-   my $output = $self->_combine_files($c, \@files);
-
-   $c->res->headers->last_modified( max map stat($_)->mtime, @files );
+   $c->res->headers->last_modified( max map stat($_)->mtime, @{$file_list} );
    $c->res->body( $self->_minify($c, $output) );
 }
 
@@ -136,6 +133,34 @@ sub _expand_stash {
 
 }
 
+sub _with_js_dir {
+   my ( $self, $files, $abs_root ) = @_;
+
+   my $js_dir;
+   if ( !ref $self->js_dir ) {
+      $js_dir = Path::Class::Dir->new($self->js_dir)->absolute( $abs_root );
+   } elsif ( ref $self->js_dir eq 'ARRAY' ) {
+      $js_dir = Path::Class::Dir->new(@{$self->js_dir})->absolute( $abs_root );
+   }
+
+   # backcompat only
+   $js_dir = $self->INCLUDE_PATH->subdir($js_dir) if $self->INCLUDE_PATH;
+
+   my @file_list = map {
+      $_ =~ s/\.js$//;  $js_dir->file( "$_.js" )
+   } grep { defined $_ && $_ ne '' } @{$files};
+
+   return \@file_list;
+}
+
+sub _no_js_dir {
+   my ( $self, $files ) = @_;
+
+   my @file_list = grep { defined $_ && $_ ne '' } @{$files};
+
+   return \@file_list;
+}
+
 1;
 
 =pod
@@ -175,7 +200,8 @@ sets a different stash variable from the default C<< $c->stash->{js} >>
 =item js_dir
 
 Directory containing your javascript files.  If a relative path is
-given, it is taken as relative to your app's root directory.
+given, it is taken as relative to your app's root directory.  If a false
+value is passed to js_dir then no directory is used.
 
 default : js
 

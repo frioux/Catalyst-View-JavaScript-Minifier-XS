@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ - allow js_dir to be disabled by setting it false (Geoff Darling)
 
 2.101001  2012-11-17 15:53:38 CST6CDT
  - Put MetaYAML back in dist
